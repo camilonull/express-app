@@ -1,7 +1,7 @@
-// ==== main.js ====
 let limitedRecsGlobal = [];
 let rentabilidadOrdenadoGlobal = [];
 let crecimientoOrdenadoGlobal = [];
+const baseClienteBlobUrl = "https://almacenamientoexpress.blob.core.windows.net/mis-archivos/BaseCliente.csv?sp=r&st=2025-04-28T00:23:15Z&se=2025-08-20T08:23:15Z&sv=2024-11-04&sr=b&sig=TBZo7fBfgulDh1giU5CVVIInQr5C6pXBHRQ%2FR0bkiuM%3D";
 const baseCliCCBlobUrl = "https://almacenamientoexpress.blob.core.windows.net/mis-archivos/BaseCliCC.csv?sp=r&st=2025-04-28T00:26:06Z&se=2025-08-20T08:26:06Z&sv=2024-11-04&sr=b&sig=r%2FYtIJNBwIRe8g5jZAAP8BA2wZnAbhgk%2BgvfugcRthE%3D";
 
 
@@ -288,6 +288,7 @@ function topCIIU(data) {
   $('#tableTopCIIU').DataTable({
     scrollY: "250px",
     pageLength: 5,
+    scrollX: true,
     language: {
       url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
     }
