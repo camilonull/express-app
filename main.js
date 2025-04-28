@@ -2,7 +2,6 @@
 let limitedRecsGlobal = [];
 let rentabilidadOrdenadoGlobal = [];
 let crecimientoOrdenadoGlobal = [];
-const baseClienteBlobUrl = "https://almacenamientoexpress.blob.core.windows.net/mis-archivos/BaseCliente.csv?sp=r&st=2025-04-28T00:23:15Z&se=2025-08-20T08:23:15Z&sv=2024-11-04&sr=b&sig=TBZo7fBfgulDh1giU5CVVIInQr5C6pXBHRQ%2FR0bkiuM%3D";
 const baseCliCCBlobUrl = "https://almacenamientoexpress.blob.core.windows.net/mis-archivos/BaseCliCC.csv?sp=r&st=2025-04-28T00:26:06Z&se=2025-08-20T08:26:06Z&sv=2024-11-04&sr=b&sig=r%2FYtIJNBwIRe8g5jZAAP8BA2wZnAbhgk%2BgvfugcRthE%3D";
 
 
@@ -494,7 +493,6 @@ document.getElementById('processBtn').addEventListener('click', async () => {
       r && typeof r.IDENTIFICACION !== 'undefined' &&
       nits.includes(String(r.IDENTIFICACION).trim())
     );
-    console.log(`Filtrados ${secFiltered.length} registros de la base secundaria.`);
     // Filtrar la base primaria por los ciiu_ccb que existen en la base secundaria
     const ciiuSec = new Set(secFiltered.map(r => r.ciiu_ccb)); // Crear un Set con los ciiu_ccb únicos de baseSec
     const primFiltered = basePrim.filter(r => ciiuSec.has(r.ciiu_ccb) && !nits.includes(String(r.IDENTIFICACION).trim()));
