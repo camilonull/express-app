@@ -12,18 +12,40 @@ function clearLog() {
 }
 
 async function descargarCSVDesdeBlob(blobUrl) {
+  showProgress();
+
+  const response = await fetch(blobUrl);
+  const reader = response.body.getReader();
+  const contentLength = +response.headers.get('Content-Length');
+
+  let receivedLength = 0;
+  let chunks = [];
+
+  while (true) {
+    const { done, value } = await reader.read();
+
+    if (done) break;
+
+    chunks.push(value);
+    receivedLength += value.length;
+
+    const percent = Math.floor((receivedLength / contentLength) * 100);
+    updateProgress(percent);
+  }
+
+  // Combinar todos los chunks
+  let blob = new Blob(chunks);
+  let text = await blob.text();
+
+  hideProgress();
+
   return new Promise((resolve, reject) => {
-    Papa.parse(blobUrl, {
-      download: true,
+    Papa.parse(text, {
       header: true,
       skipEmptyLines: true,
       dynamicTyping: true,
-      complete: results => {
-        resolve(results.data);
-      },
-      error: err => {
-        reject(err);
-      }
+      complete: results => resolve(results.data),
+      error: err => reject(err)
     });
   });
 }
@@ -417,6 +439,25 @@ function computeRecommendations(basePrim, baseSec, weights) {
 
   return results;
 }
+function showProgress() {
+  const container = document.getElementById('progressContainer');
+  container.classList.remove('d-none');
+}
+
+function updateProgress(percent) {
+  const bar = document.getElementById('progressBar');
+  bar.style.width = `${percent}%`;
+  bar.setAttribute('aria-valuenow', percent);
+  bar.textContent = `${percent}%`;
+}
+
+function hideProgress() {
+  const container = document.getElementById('progressContainer');
+  container.classList.add('d-none');
+  updateProgress(0);
+}
+
+
 
 let debounceTimeout;
 
@@ -437,7 +478,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
   }
 
   // Mostrar spinner
-  showSpinner();
+  //showSpinner();
 
   try {
     log('🚀 Paso 1: Leyendo NITs desde Excel...');
@@ -487,6 +528,6 @@ document.getElementById('processBtn').addEventListener('click', async () => {
     log('❌ Error inesperado: ' + error.message);
   } finally {
     // Ocultar spinner
-    hideSpinner();
+    //hideSpinner();
   }
 });
